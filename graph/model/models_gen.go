@@ -25,3 +25,8 @@ type QuestionInput struct {
 	QuestionText string `json:"question_text"`
 	PubDate      string `json:"pub_date"`
 }
+
+type UpdateQuestion struct {
+	QuestionText *string `json:"question_text,omitempty"`
+	PubDate      *string `json:"pub_date,omitempty"`
+}

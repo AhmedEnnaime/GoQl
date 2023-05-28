@@ -31,7 +31,14 @@ input ChoiceInput {
   choice_text: String!
 }
 
+input UpdateQuestion {
+  question_text: String
+  pub_date: String
+}
+
 type Mutation {
   createQuestion(input: QuestionInput!): Question!
+  updateQuestion(id: String, input: UpdateQuestion!): Question!
+  deleteQuestion(id: String): Question!
   createChoice(input: ChoiceInput): Choice!
 }

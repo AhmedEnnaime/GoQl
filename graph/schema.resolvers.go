@@ -30,6 +30,46 @@ func (r *mutationResolver) CreateQuestion(ctx context.Context, input model.Quest
 	return question, nil
 }
 
+// UpdateQuestion is the resolver for the updateQuestion field.
+func (r *mutationResolver) UpdateQuestion(ctx context.Context, id *string, input model.UpdateQuestion) (*model.Question, error) {
+	db := db.Model
+	data := make(map[string]interface{})
+	Question := &model.Question{}
+
+	if input.PubDate != nil {
+		data["pub_date"] = input.PubDate
+	}
+
+	if input.QuestionText != nil {
+		data["question_text"] = input.QuestionText
+	}
+
+	if err := db.Model(&Question).Where("id = ?", *id).Updates(data).Error; err != nil {
+		return nil, err
+	}
+
+	return Question, nil
+}
+
+// DeleteQuestion is the resolver for the deleteQuestion field.
+func (r *mutationResolver) DeleteQuestion(ctx context.Context, id *string) (*model.Question, error) {
+	db := db.Model
+	Question := &model.Question{}
+
+	result := db.Where("id = ?", *id).Delete(&Question)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return nil, fmt.Errorf("no user with ID %s found", *id)
+	}
+
+	msg := fmt.Sprintf("User with ID %s has been deleted", *id)
+
+	return Question, fmt.Errorf(msg)
+}
+
 // CreateChoice is the resolver for the createChoice field.
 func (r *mutationResolver) CreateChoice(ctx context.Context, input *model.ChoiceInput) (*model.Choice, error) {
 	panic(fmt.Errorf("not implemented: CreateChoice - createChoice"))
